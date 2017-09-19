@@ -1,0 +1,70 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    End of <b>Year {{round_number}}</b>
+{% endblock %}
+
+{% block styles %}
+<style type = text/css>
+.redtext {
+     color: #FF0000;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<p>
+    Your final herd size this year: <b>{{ herd_size_after_transfers }}</b>
+</p>
+
+<p>
+    Other players' final herd size:
+</p>
+<ul>
+    {% for p in other_players %}
+        <li>Player {{ p.id_in_group }}'s final herd size is <b>{{ p.herd_size_after_transfers }}</b>.</li>
+        <i class="redtext">
+        {% if p.under_minimum == True %}
+            <b>WARNING:</b> Player {{p.id_in_group}}'s herd size is under the minimum threshold of {{minherd|c}}.
+            They have <b>{{ p.under_minimum_years_left }}
+            {% if p.under_minimum_years_left > 1 %}
+                years
+            {% else %}
+                year
+            {% endif %}</b>
+            left to increase their herd size over this minimum threshold, or they will die.
+        {% endif %}
+        </i>
+    {% endfor %}
+</ul>
+
+<p class="redtext">
+{% if under_minimum == True %}
+    {% if dead == False %}
+        <i>WARNING: Your herd size is under the minimum threshold of {{minherd|c}}</i>.
+        You have finished the year under the minimum threshold. From the beginning of next year,
+        you will have <b>{{under_minimum_years_left}}
+        {% if under_minimum_years_left > 1 %}
+            years
+        {% else %}
+            year
+        {% endif %}
+        </b> left to increase your herd size over the threshold. If, after this time, your herd size is still under
+        the minimum threshold, you will die and your game will be over!
+    {% elif dead == True %}
+        <b>Your herd size has remained under the minimum threshold of {{minherd|c}}. As you have finished under the
+            minimum threshold for {{under_minimum_years_before_death}} years in a row, <u>you have died</u> and your game is over.
+            Please click Next to end the experiment.</b>
+    {% endif %}
+{% endif %}
+</p>
+
+<p>
+    Click Next to proceed to the next year.
+</p>
+
+{% next_button %}
+
+{% endblock %}

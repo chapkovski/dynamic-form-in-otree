@@ -1,0 +1,78 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    <b>Year {{round_number}}</b> - Herd growth
+{% endblock %}
+
+{% block styles %}
+<style type = text/css>
+.redtext {
+     color: #FF0000;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<p>
+    After this year's growth, your herd has
+    {% if herd_size_initial < herd_size_after_growth %}
+        grown from {{ herd_size_initial }} to <b>{{ herd_size_after_growth }}</b>.
+    {% elif herd_size_initial == herd_size_after_growth %}
+        not changed from <b>{{ herd_size_after_growth }}</b>.
+    {% else %}
+        reduced from {{ herd_size_initial }} to <b>{{ herd_size_after_growth }}</b>.
+    {% endif %}
+</p>
+
+{% if under_minimum == True %}
+    <p class="redtext">
+        <i>
+            <b>WARNING:</b> Your herd size is under the minimum threshold of {{minherd|c}}.
+            You have <b>{{under_minimum_years_left}}
+            {% if under_minimum_years_left > 1 %}
+                years
+            {% else %}
+                year
+            {% endif %}</b>
+            left to increase your herd size over this minimum threshold, or you will die.
+        </i>
+    </p>
+{% endif %}
+
+
+<p>Other players:</p>
+<ul>
+    {% for p in other_players %}
+        <li>Player {{p.id_in_group}}'s herd
+            {% if p.herd_size_initial < p.herd_size_after_growth %}
+                grew from {{ p.herd_size_initial }} to <b>{{ p.herd_size_after_growth }}</b>.
+            {% elif p.herd_size_initial == p.herd_size_after_growth %}
+                did not change from <b>{{ p.herd_size_after_growth }}</b>.
+            {% else %}
+                reduced from {{ p.herd_size_initial }} to <b>{{ p.herd_size_after_growth }}</b>.
+            {% endif %}
+        </li>
+        <i class="redtext">
+            {% if p.under_minimum == True %}
+                <b>WARNING:</b> Player {{p.id_in_group}}'s herd size is under the minimum threshold of {{minherd|c}}.
+                They have <b>{{p.under_minimum_years_left}}
+                {% if p.under_minimum_years_left > 1 %}
+                    years
+                {% else %}
+                    year
+                {% endif %}</b>
+                left to increase their herd size over this minimum threshold, or they will die.
+            {% endif %}
+        </i>
+    {% endfor %}
+</ul>
+
+<p>
+    Click Next to continue.
+</p>
+
+{% next_button %}
+
+{% endblock %}

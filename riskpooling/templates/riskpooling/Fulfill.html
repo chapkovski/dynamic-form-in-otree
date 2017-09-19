@@ -1,0 +1,112 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    <b>Year {{ round_number }}</b> - Fulfill requests
+{% endblock %}
+
+{% block styles %}
+    <style type=text/css>
+        .redtext {
+            color: #FF0000;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+ {{ formset.management_form }}
+    {% if formset.non_form_errors %}
+        <div class="panel panel-danger">
+            <div class="panel-heading">Error!</div>
+            <div class="panel-body">{{ formset.non_form_errors }}</div>
+        </div>
+    {% endif %}
+    <p>
+        Your current herd size is <b>{{ herd_size_after_shock }}</b>.
+    </p>
+
+    {% if under_minimum == True %}
+        <p class="redtext">
+            <i>
+                <b>WARNING:</b> Your herd size is under the minimum threshold of {{ minherd|c }}.
+                You have <b>{{ under_minimum_years_left }}
+                {% if under_minimum_years_left > 1 %}
+                    years
+                {% else %}
+                    year
+                {% endif %}</b>
+                left to increase your herd size over this minimum threshold, or you will die.
+            </i>
+        </p>
+    {% endif %}
+
+    <p>Other players:</p>
+    <ul>
+        {% for p in other_players %}
+            <li>
+                Player {{ p.id_in_group }}'s current herd size is <b>{{ p.herd_size_after_shock }}</b>.
+            </li>
+            <i class="redtext">
+                {% if p.under_minimum == True %}
+                    <b>WARNING:</b> Player {{ p.id_in_group }}'s herd size is under the minimum threshold of
+                    {{ minherd|c }}.
+                    They have <b>{{ p.under_minimum_years_left }}
+                    {% if p.under_minimum_years_left > 1 %}
+                        years
+                    {% else %}
+                        year
+                    {% endif %}</b>
+                    left to increase their herd size over this minimum threshold, or they will die.
+                {% endif %}
+            </i>
+        {% endfor %}
+    </ul>
+
+    <br>
+
+    {% if request_me == 0 %}
+        <p>
+            As no other player has requested any cattle from you this year, you have no requests to fulfill.
+        </p>
+    {% elif request_me > 0 %}
+        <p>
+            {% if request_me == 1 %}Another player has {% elif request_me > 1 %}Other players have {% endif %}
+            requested cattle from you this year:
+        </p>
+        {% for p in other_players %}
+            <ul>
+                {% if p.request_player == player.id_in_group %}
+                    <li>Player {{ p.id_in_group }} has {{ p.herd_size_after_shock }}
+                        and is requesting <b>{{ p.request_amount }}</b> from you.
+                    </li>
+                {% endif %}
+            </ul>
+        {% endfor %}
+        <p>
+            You can give as many cattle you like to
+            {% if request_me == 1 %}this player{% elif request_me > 1 %}these players{% endif %}.
+            You may also give nothing.
+        </p>
+
+        {{ formset.management_form }}
+        <table class="table table-striped table-hover">
+
+            {% for f in formset %}
+                <tr>
+                    <td>Player {{ f.instance.receiver.id_in_group }}</td>
+                    <td>asked for: {{ f.instance.amount_requested }}</td>
+                    <td>{{ f.as_p }} </td>
+                </tr>
+
+            {% endfor %}
+        </table>
+
+    {% endif %}
+
+    <p>
+        Click Next to continue.
+    </p>
+
+    {% next_button %}
+
+{% endblock %}

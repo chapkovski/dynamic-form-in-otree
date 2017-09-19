@@ -1,0 +1,75 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    <b>Year {{round_number}}</b> - Request
+{% endblock %}
+
+{% block styles %}
+<style>
+ul#id_request_player {
+     list-style-type: none;
+}
+.redtext {
+     color: #FF0000;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<h3>ID IN GROUP {{ player.id_in_group }}</h3>
+<p>
+    Your current herd size is <b>{{herd_size_after_shock}}</b>.
+</p>
+
+{% if under_minimum == True %}
+    <p class="redtext">
+        <i>
+            <b>WARNING:</b> Your herd size is under the minimum threshold of {{minherd|c}}.
+            You have <b>{{under_minimum_years_left}}
+            {% if under_minimum_years_left > 1 %}
+                years
+            {% else %}
+                year
+            {% endif %}</b>
+            left to increase your herd size over this minimum threshold, or you will die.
+        </i>
+    </p>
+{% endif %}
+
+<p>Other players:</p>
+<ul>
+    {% for p in other_players %}
+        <li>
+            Player {{p.id_in_group}}'s current herd size is <b>{{ p.herd_size_after_shock }}</b>.
+        </li>
+        <i class="redtext">
+        {% if p.under_minimum == True %}
+            <b>WARNING:</b> Player {{p.id_in_group}}'s herd size is under the minimum threshold of {{minherd|c}}.
+            They have <b>{{ p.under_minimum_years_left }}
+            {% if p.under_minimum_years_left > 1 %}
+                years
+            {% else %}
+                year
+            {% endif %}</b>
+            left to increase their herd size over this minimum threshold, or they will die.
+        {% endif %}
+        </i>
+    {% endfor %}
+</ul>
+
+<br>
+
+<p>
+    <b>You would like to make a request for cattle.</b>
+</p>
+
+{{ form }}
+
+<p>
+    Click Next to continue.
+</p>
+
+{% next_button %}
+
+{% endblock %}

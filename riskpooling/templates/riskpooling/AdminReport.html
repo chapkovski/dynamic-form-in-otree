@@ -1,0 +1,23 @@
+<table class="table table-hover table-striped table-responsive">
+    <thead>
+    <tr>
+        <th>Group Id:</th>
+        <th>Sender id in group:</th>
+         <th>Receiver id in group:</th>
+        <th>Amount requested:</th>
+       <th>Amount sent:</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for t in all_transfers %}
+        <tr>
+            <td>{{ t.sender__group__id_in_subsession }}</td>
+            <td>{{ t.sender__id_in_group }}</td>
+
+            <td>{{ t.receiver__id_in_group }}</td>
+        <td>{{ t.amount_requested }}</td>
+        <td>{{ t.amount_sent }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
