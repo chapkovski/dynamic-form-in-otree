@@ -1,0 +1,61 @@
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script>
+    Highcharts.chart('container', {
+        chart: {
+            type: 'column',
+            width: 250,
+            height: 350
+        },
+        yAxis: {
+            min: 0,
+            max: 200,
+            title: {
+                text: 'Herd size (number of cattle)'
+            },
+            plotLines: [{
+                color: 'red', // Color value
+                value: 64, // Value of where the line will appear
+                width: 1, // Width of the line
+                zIndex: 4,
+            }],
+        },
+        xAxis: {
+            labels: {
+                enabled: false
+            },
+            tickLength: 0
+        },
+        title: {
+            text: null
+        },
+        tooltip: {
+            headerFormat: '',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.0f} cattle</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                pointWidth: 140,
+                borderWidth: 0,
+                columnWidth: 10
+            }
+        },
+        series: [{
+            name:'Current herd size',
+            data: [{{herd_size_for_chart}}],
+            showInLegend: false
+        }],
+        credits: {
+            enabled: false
+        },
+        exporting: { enabled: false }
+    });
+</script>

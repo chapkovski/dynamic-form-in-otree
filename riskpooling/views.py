@@ -6,6 +6,11 @@ import django
 from django import forms
 from .forms import SRFormSet
 from django.db.models import Q
+from django import template
+
+
+def vars_for_all_templates(self):
+    return {'herd_size_for_chart': int(self.player.herd_size_after_shock)}
 
 
 class NewYear(Page):
